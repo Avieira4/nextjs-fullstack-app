@@ -1,10 +1,10 @@
 'use client'
 import Link from "next/link"
 import Button from "./Button"
-import { useAuth } from "@/context/AuthContext"
+import { AuthObj, useAuth } from "@/context/AuthContext"
 
 export default function CallToAction() {
-    const {currentUser} = useAuth()
+    const { currentUser }: AuthObj = useAuth()
 
     if(currentUser)
         return (

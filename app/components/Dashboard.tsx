@@ -2,7 +2,7 @@
 import { Fugaz_One } from "next/font/google"
 import Calendar from "./Calendar"
 import { useEffect, useState } from "react"
-import { useAuth } from "@/context/AuthContext"
+import { AuthObj, useAuth } from "@/context/AuthContext"
 import { doc, setDoc } from "firebase/firestore"
 import { db } from "@/firebase"
 import Login from "./Login"
@@ -11,17 +11,17 @@ import Loading from "./Loading"
 const fugaz = Fugaz_One({ subsets: ["latin"], weight: ['400'] })
 
 export default function Dashboard() {
-  const {currentUser, userDataObj, setUserDataObj, loading } = useAuth()
-  const [data, setData] = useState({})
+  const {currentUser, userDataObj, setUserDataObj, loading }: AuthObj = useAuth()
+  const [data, setData] = useState<CompleteData>({})
   const now = new Date()
 
   function countValues(){
     let totalNumberOfDays = 0
     let sumMoods = 0
-    for(let year in data){
-      for(let month in data[year]){
-        for(let day in data[year][month]){
-          let daysMood = data[year][month][day]
+    for(const year in data){
+      for(const month in data[year]){
+        for(const day in data[year][month]){
+          const daysMood = data[year][month][day]
           totalNumberOfDays++
           sumMoods += daysMood
         }
@@ -51,9 +51,9 @@ export default function Dashboard() {
 
       newData[year][month][day] = mood
       setData(newData)
-      setUserDataObj(newData)
-      const docRef = doc(db, 'users', currentUser.uid)
-      const res = await setDoc(docRef, {
+      setUserDataObj!(newData)
+      const docRef = doc(db, 'users', currentUser!.uid)
+      await setDoc(docRef, {
         [year]: {
           [month]: {
             [day]: mood
@@ -123,8 +123,16 @@ export default function Dashboard() {
           )
         })}
       </div>
-      <Calendar completeData={data} handleSetMood={handleSetMood}/>
+      <Calendar completeData={data}/>
       <div className="class"></div>
     </div>
   )
 }
+
+export type CompleteData = {
+  [year: number]: {
+      [month: number]: {
+          [day: number]: number;
+      };
+  };
+};

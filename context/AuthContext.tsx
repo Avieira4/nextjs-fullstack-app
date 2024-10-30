@@ -5,7 +5,7 @@ import { doc, DocumentData, getDoc } from 'firebase/firestore'
 import React from 'react'
 import { useContext, useState, useEffect } from 'react'
 
-const AuthContext = React.createContext()
+const AuthContext = React.createContext({})
 
 export function useAuth(){
     return useContext(AuthContext)
@@ -63,7 +63,7 @@ export function AuthProvider({ children }: any) {
         return unsubscribe
     }, [])
 
-    const value = {
+    const value: AuthObj = {
         currentUser,
         userDataObj,
         setUserDataObj,
@@ -78,17 +78,16 @@ export function AuthProvider({ children }: any) {
             {children}
         </AuthContext.Provider>
     )
-}
+} 
 
 
-/*
+
 export interface AuthObj {
-    currentUser: User | null,
-    userDataObj: DocumentData | null, 
-    setUserDataObj: React.Dispatch<React.SetStateAction<DocumentData | null>>,
-    signup: (email: string, password: string) => Promise<UserCredential>,
-    logout: () => Promise<void>,
-    login: (email: string, password: string) => Promise<UserCredential>,
-    loading: boolean
+    currentUser?: User | null,
+    userDataObj?: DocumentData | null, 
+    setUserDataObj?: React.Dispatch<React.SetStateAction<DocumentData | null>>,
+    signup?: (email: string, password: string) => Promise<UserCredential>,
+    logout?: () => Promise<void>,
+    login?: (email: string, password: string) => Promise<UserCredential>,
+    loading?: boolean
 }
-*/

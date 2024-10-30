@@ -1,19 +1,20 @@
 'use client'
 import { Fugaz_One } from "next/font/google"
-import { baseRating, gradients, demoData } from "@/utils";
+import { baseRating, gradients } from "@/utils"; //demoData
 import { useState } from "react";
+import { CompleteData } from "./Dashboard";
 
   const fugaz = Fugaz_One({ subsets: ["latin"], weight: ['400'] });
   const months = { 'January': 'Jan', 'February': 'Feb', 'March': 'Mar', 'April': 'Apr', 'May': 'May', 'June': 'Jun', 'July': 'Jul', 'August': 'Aug', 'September': 'Sept', 'October': 'Oct', 'November': 'Nov', 'December': 'Dec' }
   const monthsArr = Object.keys(months)
   const dayList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-export default function Calendar(props: any) {
+export default function Calendar(props: CalendarProps) {
   const now = new Date()
   const currMonth = now.getMonth()
   const [selectedMonth, setSelectedMonth] = useState(monthsArr[currMonth])
   const [selectedYear, setSelectedYear] = useState(now.getFullYear())
-  const { demo, completeData, handleSetMood } = props
+  const { demo, completeData } = props
   const numericMonth = monthsArr.indexOf(selectedMonth)
   const data = completeData?.[selectedYear]?.[numericMonth] || {}
   const monthNow = new Date(selectedYear, monthsArr.indexOf(selectedMonth), 1)
@@ -53,11 +54,11 @@ export default function Calendar(props: any) {
           return (
             <div key={rowIndex} className="grid grid-cols-7 gap-1">
               {dayList.map((dayOfWeek, dayOfTheWeekIndex) => {
-                let dayIndex = (rowIndex * 7) + dayOfTheWeekIndex - (firstDayOfMonth - 1)
-                let dayDisplay = dayIndex > daysInMonth ? false : 
+                const dayIndex = (rowIndex * 7) + dayOfTheWeekIndex - (firstDayOfMonth - 1)
+                const dayDisplay = dayIndex > daysInMonth ? false : 
                   (row === 0 && dayOfTheWeekIndex < firstDayOfMonth) ? false : true
 
-                let isToday = dayIndex === now.getDate()
+                const isToday = dayIndex === now.getDate()
                 if(!dayDisplay){
                   return (
                     <div className="bg-white" key={dayOfTheWeekIndex}>
@@ -65,7 +66,7 @@ export default function Calendar(props: any) {
                   )
                 }
 
-                let color = demo ? gradients.indigo[baseRating[dayIndex]] : 
+                const color = demo ? gradients.indigo[baseRating[dayIndex]] : 
                   dayIndex in data ? gradients.indigo[data[dayIndex]] : 'white'
 
                 return (
@@ -82,9 +83,13 @@ export default function Calendar(props: any) {
             </div>
           )
         })}
-
       </div>
     </div>
 
   )
+}
+
+export interface CalendarProps {
+  completeData?: CompleteData,
+  demo?: boolean
 }

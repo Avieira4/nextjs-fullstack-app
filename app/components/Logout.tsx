@@ -1,11 +1,11 @@
 'use client'
-import { useAuth } from "@/context/AuthContext"
+import { AuthObj, useAuth } from "@/context/AuthContext"
 import Button from "./Button"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 
 export default function Logout() {
-    const { logout, currentUser } = useAuth()
+    const { logout, currentUser }: AuthObj = useAuth()
     const pathName = usePathname()
 
 
